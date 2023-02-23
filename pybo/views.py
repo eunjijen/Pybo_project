@@ -52,16 +52,17 @@ def question_create(request):
     """
     pybo 질문등록
     """
-    if request.method == 'POST':        # submit을 통한 POST 요청
+    if request.method == 'POST':        # submit을 통한 POST 요청/처리
         form = QuestionForm(request.POST)  
         if form.is_valid():             # 유효성 검사
-            question = form.save(commit=False)
+            question = form.save(commit=False)    # db에는 반영하지 마라
             question.create_date = timezone.now()
-            question.save()
-            return redirect('pybo:index')
+            question.save()                # 인스턴스를 통해 db에 저장
+            return redirect('pybo:index')   # get으로 바꾸기 위해 redirect 목록보기로 이동
 
     else:    # GET 요청
-        form = QuestionForm()      # 클래스 생성
+        form = QuestionForm()      # 클래스 생성  내용이 비어있는 form이 템플릿으로 넘어가
 
-    context = {'form':form}
+    context = {'form':form}      # 유효성 검사 결과 false라면 여기로 옴
     return render(request, 'pybo/question_form.html', context)
+# db에 저장을 못하면 랜더링으로 넘어가

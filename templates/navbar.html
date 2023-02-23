@@ -3,11 +3,29 @@
   <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item ">
-        <a class="nav-link" href="#">로그인</a>
-      </li>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <!--margin left-->
+      {% if user.is_authenticated %}
+        <li class="nav-item ">
+          <a class="nav-link" href="#">
+            <img class="avatar" src="https://randomuser.me/api/portraits/women/67.jpg">
+            <!--"https://randomuser.me/api/portraits/women/{{user.id}}.jpg"-->
+            {{user.username}}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'common:logout' %}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            로그아웃</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'common:login' %}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            로그인</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 </nav>
