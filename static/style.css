@@ -1,9 +1,9 @@
+@import url('http://fonts.googleapis.com/css2')
 
-textarea {
-    width: 50%;
-    height: 20%;
+* {
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
-input[type=submit] {
-    margin-top: 7px;
+.page-link {
+    border: 0px;
 }

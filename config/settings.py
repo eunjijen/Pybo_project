@@ -24,7 +24,9 @@ SECRET_KEY = "django-insecure--(&zpk2sni#q9k+^42)*2%i2m4$so$x0@2@i$w7&*vtkm45cie
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.35.245','127.0.0.1','localhost'] # 이거 3개만 허용
+# 어느 서버로 접속하는 것을 허용할 것인가
+# python manage.py runserver 0.0.0.0:8000 서버 가동할 때 이렇게 사용
 
 
 # Application definition

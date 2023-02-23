@@ -14,9 +14,8 @@
     <tbody>
       {% if question_list %}
         {% for question in question_list %}
-
           <tr>
-            <td>{{ forloop.counter }}</td>
+            <td>{{ question.id }}</td>
             <td>
               <a href="{% url 'pybo:detail' question.id %}">
                 {{ question.subject }}
@@ -25,7 +24,6 @@
             <td>{{ question.create_date }}</td>
           </tr>
         {% endfor %}
-
       {% else %}
         <tr>
           <td colspan="3">질문이 없습니다.</td>
@@ -39,6 +37,7 @@
   <!-- 페이징 처리 끝 -->
   <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
     <i class="fa-solid fa-pen-to-square mr-2"></i>
+    <!--mr은 margin right-->
     질문 등록하기
   </a>
 

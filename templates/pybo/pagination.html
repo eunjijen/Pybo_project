@@ -1,0 +1,57 @@
+<ul class="pagination justify-content-center">
+
+  <!-- 이전 페이지 -->
+  {% if question_list.has_previous %}
+    <li class=" page-item">
+      <a class=" page-link" href="?page=1">
+        <i class="fa-solid fa-backward-fast"></i>
+      </a>
+    </li>
+    <li class=" page-item">
+      <a class=" page-link" href="?page={{question_list.previous_page_number}}">
+        <i class="fa-solid fa-caret-left"></i>
+      </a>
+    </li>
+  {% else %}
+    <li class="page-item disabled">
+      <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+        <i class="fa-solid fa-angle-left"></i>
+      </a>
+    </li>
+  {% endif %}
+
+  <!-- 페이지 리스트 -->
+  {% for page_number in question_list.paginator.page_range %}
+    {% if page_number >= question_list.number|add:-3 and page_number <= question_list.number|add:3 %}
+      <!-- | 앞에 있는 것을 매개변수로 받아 (줄바꿔서 타이핑하면 안됨) | 사이와 : 사이도 모두 붙여야 돼. 띄워쓰기 하면 에러 -->
+      <!-- 위 범위 안에 있으면 랜더링을 하고 그렇지 않으면 랜드링을 하지 마라-->
+      {% if page_number == question_list.number %}
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="#">{{page_number}}</a>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{page_number}}">{{page_number}}</a>
+        </li>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  <!-- 다음 페이지 -->
+  {% if question_list.has_next %}
+    <li class=" page-item">
+      <a class=" page-link" href="?page={{question_list.next_page_number}}"></a>
+      <i class="fa-solid fa-caret-right"></i>
+    </li>
+    <li class=" page-item">
+      <a class=" page-link" href="?page={{question_list.paginator.num_pages}}"></a>
+      <i class="fa-solid fa-forward-fast"></i>
+    </li>
+  {% else %}
+    <li class="page-item disabled">
+      <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+      <i class="fa-solid fa-caret-right"></i>
+      </a>
+    </li>
+  {% endif %}
+</ul>
