@@ -6,22 +6,54 @@
 
     <form method="post" class="post-form my-3">
       {% csrf_token %}
+      <!-- 오류표시 start -->
+      {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for field in form %}
+            {% if field.errors %}
+              <strong>{{ field.label }}</strong>
+              <!-- label명 -->
+              {{field.errors}}
+              <!-- 에러 이유 문자열 -->
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      <!-- 오류 표시 end-->
+
       <!-- {{form.as_p}} -->
       <!-- context 변수 field를 p태그로 묶어서 랜더링해라-->
       <div class="form_group">
-        <label for="id_subject">제목</label>
-        <input type="text" class="form_control" name="subject" id="subject" value={{form.subject.value} }="}">
-      </label>
-    </div>
+        <label for="id_subject">제목:</label>
+        <input type="text" class="form_control" name="subject" id="subject" value="{{ form.subject.value|default_if_none:'' }}">
+        <!-- 수직 바 앞에있는 값이 0이면 default로 ''값울 줘라-->
+      </div>
 
-    <div class="form_group">
-      <label for="id_content">내용</label>
-      <textarea class="form_control" name="content" id="content" rows="10">{{form.content.value}}
-      </textarea>
-    </div>
+      <div class="form_group">
+        <label for="id_content">내용</label>
+        <textarea class="form_control" name="content" id="content" rows="10">{{form.content.value|default_if_none:''}}
+        </textarea>
+        {% if form.content.errors %}
+          <div class="text-danger">
+            {% for error in form.content.errors %}
+              <div>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {{error}}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
 
-    <button type="submit" class="btn btn-primary">저장하기</button>
-  </form>
-</div>
+      <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-check"></i>
+        저장하기
+      </button>
+      <a href="{% url 'Pybo:index' %}" class="btn btn-primary">
+        <i class="fa-solid fa-list"></i>
+        목록으로
+      </a>
+    </form>
+  </div>
 
 {% endblock %}

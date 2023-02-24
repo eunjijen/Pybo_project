@@ -13,3 +13,20 @@
     height: 30px;
     border-radius: 50%;
 }
+
+.auth-form {
+    width: 100%;
+}
+
+/* width가 540이상이면 */
+@media(min-width: 540px) {
+    .auth-form {
+      width: 540px;
+    }
+}
+
+@media(min-width: 720px) {
+    .auth-form {
+      width: 720px;
+    }
+}

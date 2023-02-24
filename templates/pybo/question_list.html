@@ -5,9 +5,10 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr class="thead-dark">
-        <th>번호</th>
+        <th style="width:60px">번호</th>
         <th>제목</th>
-        <th>작성일시</th>
+        <th style="width:100px">글쓴이</th>
+        <th style="width:230px">작성일시</th>
       </tr>
     </thead>
 
@@ -19,9 +20,16 @@
             <td>
               <a href="{% url 'pybo:detail' question.id %}">
                 {{ question.subject }}
+                {% if question.answer_set.count %}
+                  <span class="ml-2">
+                    <i class="fa-rehular fa-comment-dots"></i>
+                    <sub>{{question.answer_set.count}}</sub>
+                  </span>
+                {% endif %}
               </a>
             </td>
-            <td>{{ question.create_date }}</td>
+            <td>{{question.author.username}}</td>
+            <td>{{ question.create_date | date:'Y-m-d H:i'}}</td>
           </tr>
         {% endfor %}
       {% else %}

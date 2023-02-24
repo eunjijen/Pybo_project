@@ -1,17 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div style="width:500px" class="mx-auto">
-    <!--x축 margin 설정 auto 알아서 다 써라 (좌우 동일 배정)-->
-    <h2 class="mb-4">
-      <!-- margin bottom 최대 5-->
-      <i class="fa-solid fa-right-to-bracket"></i>
-      로그인</h2>
+  <div class="mx-auto auth-form">
+    <!-- x축 margin 설정 auto 알아서 다 써라 (좌우 동일 배정) -->
+    <div class="row ">
+      <div class="col-4">
+        <!-- margin bottom 최대 5-->
+        <i class="fa-solid fa-right-to-bracket"></i>
+        <h4>로그인</h4>
+      </div>
+      <div class="col-8 text-right">
+        또는
+        <a href="{% url 'common:signup' %}">계정을 만드세요.</a>
+      </div>
+    </div>
 
-    {% include 'form_errors.html' %}
-
-    <form method="post" class="post-form">
+    <form method="post" class="post-form" action="{% url 'common:login' %}">
       {% csrf_token %}
+
+      <!-- 로그인 성공 후 이동되는 URL -->
+      <input type="hidden" name="next" value="{{ next }}">
+
+      {% if next %}
+        <div class="text-danger mb-3">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          로그인이 필요한 서비스입니다. 먼저 로그인하세요.
+        </div>
+      {% endif %}
+
+      {% include 'form_errors.html' %}
+
       <div class="form-group">
         <label for="username">
           <i class="fa-solid fa-person"></i>
@@ -26,6 +44,7 @@
       </div>
 
       <button type="submit" class="btn btn-primary">로그인</button>
+      <button type="submit" class="btn btn-primary">회원가입</button>
     </form>
   </div>
 {% endblock content %}
