@@ -38,7 +38,7 @@
           <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
             <i class="fa-solid fa-pen-to-square mr-2"></i>
             수정</a>
-          <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="삭제 URI">
+          <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:question_delete' question.id %}">
             <i class="fa-regular fa-trash-can"></i>
             삭제</a>
         </div>
@@ -103,7 +103,12 @@
       let btns = $('.delete'); // 변수 선언 키워드 let
       btns.on('click', function () {
         console.log('click 발생');
+        let answer = confirm('정말 삭제할까요?'); // 팝업창에 메세지가 뜸(확인, 취소)
+        if (answer) {
+          location.hret = $(this).data('uri');
+        }
       });
+      console.log('click 이벤트 핸들러 등록 완료!');
     });
   </script>
 {% endblock script %}
