@@ -1,37 +1,49 @@
 {% extends 'base.html' %}
-{%block content%}
+
+{% block content %}
+  <!-- 사용자오류 표시 -->
+  {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+      {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul>
+          <li>{{ message.message }}</li>
+        </ul>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <h2 class="border-bottom py-2">
+    <i class="fa-solid fa-clipboard-question"></i>
+    {{ question.subject }}
+  </h2>
 
   <div class="card my-3">
-
-    <!-- 사용자 오류 표시 -->
-    {% if messages %}
-      <div class="alert alert-danger my-3" role="alert">
-        {% for message in messages %}
-          <strong>{{ message.tags }}</strong>
-          <ul>
-            <li>{{ message.message }}</li>
-          </ul>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <h2 class="boder-bottom py-2 text-primary">
-      <i class="fa-solid fa-question"></i>
-      {{ question.subject}}
-    </h2>
-
     <div class="card-body">
-      <div class="card-text" style="white-space: pre-line;">
-        {{question.content}}</div>
-
-      <!-- pre 태그는 공백문자 그대로 나오게 해줌 -->
+      <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
       <div class="d-flex justify-content-end">
-        <div class="badge badge-light p-2 text-left">
-          <div class="mb-2">{{ question.author.username }}</div>
-          <i class="fa-regular fa-clock"></i>
-          <div>{{question.create_date}}</div>
+        <div class="badge badge-primary p-2 text-left">
+          <div class="mb-2">
+            <img class="avarta-sm" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg"/>
+            {{ question.author.username }}</div>
+          <div>
+            <i class="fa-regular fa-clock"></i>
+            {{ question.create_date | date:'Y-m-d H:i' }}
+          </div>
         </div>
       </div>
+
+      {% if request.user == question.author %}
+        <div class="my-3">
+          <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fa-solid fa-pen-to-square mr-2"></i>
+            수정</a>
+          <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="삭제 URI">
+            <i class="fa-regular fa-trash-can"></i>
+            삭제</a>
+        </div>
+      {% endif %}
+
     </div>
   </div>
 
@@ -43,48 +55,55 @@
   {% for answer in question.answer_set.all %}
     <div class="card my-3">
       <div class="card-body">
-        <div class="card-text" style="white-space: pre-line;">
-          {{answer.content}}
-        </div>
+        <div class="card-text" style="white-space: pre-line;">{{ answer.content }}</div>
         <div class="d-flex justify-content-end">
-          <div class="badge badge-light p-2">
-            <i class="fa-regular fa-clock"></i>
-            {{question.create_date}}
+          <div class="badge badge-success p-2 text-left">
+            <div class="mb-2">
+              <img class="avarta-sm" src="https://randomuser.me/api/portraits/men/{{answer.author.id}}.jpg"/>
+              {{ answer.author.username }}
+            </div>
+            <div>
+              <i class="fa-regular fa-clock"></i>
+              {{ answer.create_date | date:'Y-m-d H:i' }}
+            </div>
           </div>
         </div>
-        {% if request.user == question.author %}
-          <div class="my-3">
-            <a href="#" class="btn btn-sm btn-outline-secondary">수정</a>
-          </div>
-        {% endif %}
+
       </div>
     </div>
-    <!-- div.card-->
   {% endfor %}
 
-  <form action=" {% url 'pybo:answer_create' question.id %} " method=" post" class="my-3">
+  <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
     {% csrf_token %}
-    <!-- 오류표시 start -->
+
     {% if form.errors %}
       <div class="alert alert-danger" role="alert">
         {% for field in form %}
           {% if field.errors %}
             <strong>{{ field.label }}</strong>
-            {{field.errors}}
+            {{ field.errors }}
           {% endif %}
         {% endfor %}
       </div>
     {% endif %}
-    <!-- 오류 표시 end-->
 
-    <div class="form group">
-
+    <div class="form-group">
       <textarea {% if not user.is_authenticated %} disabled="disabled" {% endif %} name="content" id="content" class="form-control" rows="10"></textarea>
-      <!-- class="form-control" width 100% -->
-
     </div>
     <input type="submit" value="답변등록" class="btn btn-primary">
   </form>
 
   <a href="{% url 'pybo:index' %}">목록보기</a>
-{% endblock content%}
+{% endblock content %}
+
+{% block script %}
+  <script>
+    $(document).ready(function () {
+      console.log('로딩 완료');
+      let btns = $('.delete'); // 변수 선언 키워드 let
+      btns.on('click', function () {
+        console.log('click 발생');
+      });
+    });
+  </script>
+{% endblock script %}

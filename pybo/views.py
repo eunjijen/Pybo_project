@@ -35,6 +35,7 @@ def question_create(request):
     """
     if request.method == 'POST':        # submit을 통한 POST 요청/처리
         form = QuestionForm(request.POST)  
+        
         if form.is_valid():             # 유효성 검사
             question = form.save(commit=False)    # db에는 반영하지 마라
             question.author = request.user
@@ -56,6 +57,10 @@ def question_modify(request, question_id):
     pybo 질문 수정
     """
     question = get_object_or_404(Question, pk = question_id)
+    if request.user != question.author:  # 권한 없음 403 에러
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('pybo:detail', question_id = question.id)
+    
     if request.method == "POST":
         # 질문 수정을 위해 값 덮어쓰기
         form = QuestionForm(request.POST, instance = question)
@@ -70,10 +75,8 @@ def question_modify(request, question_id):
         form = QuestionForm(instance = question)
         context = {'form': form}
         return render(request, 'pybo/question_form.html', context)
-
-    if request.user != question.author:
-        messages.error(request, '수정권한이 없습니다')
-        return redirect('pybo:detail', question_id = question.id)
+# 405 에러는 메소드 잘못
+    
 
 
 @login_required(login_url='common: login')
