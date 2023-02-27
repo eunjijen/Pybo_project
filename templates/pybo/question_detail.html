@@ -105,7 +105,7 @@
         console.log('click 발생');
         let answer = confirm('정말 삭제할까요?'); // 팝업창에 메세지가 뜸(확인, 취소)
         if (answer) {
-          location.hret = $(this).data('uri');
+          location.href = $(this).data('uri');
         }
       });
       console.log('click 이벤트 핸들러 등록 완료!');
