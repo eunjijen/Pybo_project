@@ -18,6 +18,11 @@
     width: 100%;
 }
 
+.comment {
+    border-top:dotted 1px #ddd;
+    font-size: 0.7em;
+}
+
 /* width가 540이상이면 */
 @media(min-width: 540px) {
     .auth-form {
