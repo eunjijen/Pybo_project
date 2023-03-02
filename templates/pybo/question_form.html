@@ -1,72 +1,87 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'summernote-bs4.min.css' %}">
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'summernote-bs4.min.js'%}"></script>
+  <script src="{% static 'summernote-ko-KR.min.js'%}"></script>
+  <script>
+    $(function() {
+      //Summernote
+      $('#id_content').summernote({
+        height:300
+      })
+    })
+  </script>
+{% endblock %}
+
 
 {% block content %}
-  <div class="container">
-    <h5 class="my-3 border-bottom pb-2">
-      질문등록
-    </h5>
+  <h5 class="my-3 border-bottom pb-2">
+    <i class="fa-solid fa-pen-to-square mr-2"></i>
+    질문등록
+  </h5>
 
-    <form method="post" class="post-form my-3">
-      {% csrf_token %}
-      {% bootstrap_form form %}
+  <form method="post" class="post-form my-3">
+    {% csrf_token %}
+    
+    {% bootstrap_form form %}
 
-      {% comment %} <!-- 오류표시 start -->
-      {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-          {% for field in form %}
-            {% if field.errors %}
-              <strong>{{ field.label }}</strong>
-              <!-- label명 -->
-              {{field.errors}}
-              <!-- 에러 이유 문자열 -->
-            {% endif %}
+    {% comment %}     
+    {% if form.errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+          {% if field.errors %}
+            <strong>{{ field.label }}</strong>
+            {{ field.errors }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label for="id_subject">제목:</label>
+      <input type="text" name="subject" class="form-control" id="id_subject" value="{{form.subject.value|default_if_none:''}}">
+      {% if form.subject.errors %}
+        <div class="text-danger">
+          {% for error in form.subject.errors %}
+            <div>
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              {{error}}
+            </div>
           {% endfor %}
         </div>
       {% endif %}
-      <!-- 오류 표시 end-->
+    </div>
 
-      <!-- {{form.as_p}} -->
-      <!-- context 변수 field를 p태그로 묶어서 랜더링해라-->
-      <div class="form-group">
-        <label for="id_subject">제목:</label>
-        <input type="text" name="subject" class="form-control" id="id_subject" value="{{form.subject.value|default_if_none:''}}">
-        {% if form.subject.errors %}
-          <div class="text-danger">
-            {% for error in form.subject.errors %}
-              <div>
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                {{error}}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
+    <div class="form-group">
+      <label for="id_content">내용:</label>
+      <textarea name="content" cols="40" rows="10" class="form-control" id="id_content">{{form.content.value|default_if_none:''}}</textarea>
+      {% if form.content.errors %}
+        <div class="text-danger">
+          {% for error in form.content.errors %}
+            <div>
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              {{error}}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div> {% endcomment %}
 
-      <div class="form-group">
-        <label for="id_content">내용:</label>
-        <textarea name="content" cols="40" rows="10" class="form-control" id="id_content">{{form.content.value|default_if_none:''}}</textarea>
-        {% if form.content.errors %}
-          <div class="text-danger">
-            {% for error in form.content.errors %}
-              <div>
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                {{error}}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div> {% endcomment %}
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-check"></i>
+      저장하기
+    </button>
+    <a href="{% url 'pybo:index' %}" class="btn btn-primary">
+      <i class="fa-solid fa-list"></i>
+      목록으로
+    </a>
 
-      <button type="submit" class="btn btn-primary">
-        <i class="fa-solid fa-check"></i>
-        저장하기
-      </button>
-      <a href="{% url 'pybo:index' %}" class="btn btn-primary">
-        <i class="fa-solid fa-list"></i>
-        목록으로
-      </a>
+  </form>
 
-    </form>
-
-  {% endblock content %}
+{% endblock content %}

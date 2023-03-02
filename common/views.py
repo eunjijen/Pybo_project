@@ -4,18 +4,17 @@ from common.forms import UserForm
 
 def signup(request):
     """
-    계정 생성
+    계정생성
     """
     if request.method == "POST":
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')  # cleaned_data는 dictionary : 유효성 검사를 통과한 data만 가지고 있음
+            username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username = username, password = raw_password)
+            user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('index')
-        
     else:
         form = UserForm()
-    return render(request, 'common/signup.html', {'form':form})
+    return render(request, 'common/signup.html', {'form': form})

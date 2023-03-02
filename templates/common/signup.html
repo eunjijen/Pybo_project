@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load bootstrap4 %}
 
 {% block content %}
@@ -18,17 +18,16 @@
     <form method="post" class="post-form">
       {% csrf_token %}
 
-      {% bootstrap_form form %}
+      {% bootstrap_form form%}
 
-      {% comment %} {% include "form_errors.html" %}
-
+      {% comment %} 
+      {% include "form_errors.html" %}
       <div class="form-group">
-        <label for="username">
-          사용자 이름</label>
+        <label for="username">사용자 이름</label>
         <input type="text" class="form-control" name="username" id="username" value="{{ form.username.value|default_if_none:'' }}">
       </div>
       <div class="form-group">
-        <label for="password1">사용자 비밀번호</label>
+        <label for="password1">비밀번호</label>
         <input type="password" class="form-control" name="password1" id="password1" value="{{ form.password1.value|default_if_none:'' }}">
       </div>
       <div class="form-group">
@@ -38,9 +37,11 @@
       <div class="form-group">
         <label for="email">이메일</label>
         <input type="text" class="form-control" name="email" id="email" value="{{ form.email.value|default_if_none:'' }}">
-      </div> {% endcomment %}
-
-      <button type="submit" class="btn btn-primary">생성하기</button>
-    </form>
-  </div>
+      </div>
+       {% endcomment %}
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-check"></i>
+      생성하기</button>
+  </form>
+</div>
 {% endblock %}

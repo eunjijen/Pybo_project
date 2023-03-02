@@ -25,8 +25,8 @@
     <form method="post" class="post-form">
       {% csrf_token %}
       {% bootstrap_form form %}
-
-      {% comment %} <div class="form-group">
+      {% comment %} 
+      <div class="form-group">
         <label for="username">
           <i class="fa-solid fa-user"></i>
           사용자ID</label>
@@ -38,15 +38,15 @@
           비밀번호</label>
         <input type="password" class="form-control" name="password" id="password" value="{{ form.password.value|default_if_none:'' }}">
       </div>
-      {% endcomment %}
-
+       {% endcomment %}
+      
       <button type="submit" class="btn btn-primary w-100 mb-1">
         <i class="fa-solid fa-check"></i>
         로그인</button>
 
       <a href="{% url 'common:signup'%}" class="btn btn-primary w-100">
         <i class="fa-solid fa-user-plus"></i>
-        회원가입</a> 
+        회원가입</a>
 
     </form>
   </div>

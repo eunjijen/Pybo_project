@@ -1,49 +1,112 @@
 {% extends 'base.html' %}
-
+{% load pybo_filter %}
 {% block content %}
-  <table class="table table-striped table-hover">
-    <tr class="thead-dark">
-      <th style="width:70px">번호</th>
-      <th>제목</th>
-      <th style="width:120px">글쓴이</th>
-      <th style="width:160px">작성일시</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% if question_list %}
-      {% for question in question_list %}
-        <tr>
-          <td>{{ question.id }}</td>
-          <td>
-            <a href="{% url 'pybo:detail' question.id %}">
-              {{ question.subject }}
-              {% if question.answer_set.count %}
-                <span class="ml-2">
-                  <i class="fa-regular fa-comment-dots"></i>
-                  <sub>{{question.answer_set.count}}</sub>
-                </span>
-              {% endif %}
-            </a>
-          </td>
-          <td>{{ question.author.username }}</td>
-          <td>{{ question.create_date | date:'Y-m-d H:i'}}</td>
+  <div class="container my-3">
+    
+    <!-- 질문 목록 화면에 검색창 추가 -->
+    <!-- 양쪽 정렬 between -->
+    <div class="row justify-content-between my-3">
+      <div class="col-2">
+        <select class="form-control so">
+          <option value="recent" {% if so == 'recent' %} selected{% endif %}>최신순</option>
+          <option value="recommend" {% if so == 'recommend' %} selected{% endif %}>추천순</option>
+          <option value="popular" {% if so == 'popular' %} selected{% endif %}>인기순</option>
+        </select>
+      </div>
+
+      <div class="col-4 input-group">
+        <input type="text" class="form-control kw" value="{{ kw|default_if_none:'' }}">
+        <!-- 예전에 입력한 검색어가 복원되도록 하기 위해 kw|를 사용 kw의 값이 none이면 복원이 안돼 base_views에 context 사전에 추가가 되어야 사용 가능-->
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+        </div>
+      </div>
+    </div>
+
+    {{request.kw}}{{page}}
+
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr class="thead-dark">
+          <th>번호</th>
+          <th>추천</th>
+          <th>제목</th>
+          <th style="width:120px">글쓴이</th>
+          <th style="width:160px">작성일시</th>
         </tr>
-      {% endfor %}
-    {% else %}
-      <tr>
-        <td colspan="3">질문이 없습니다.</td>
-      </tr>
-    {% endif %}
-  </tbody>
-</table>
+      </thead>
 
-{% include 'pybo/pagination.html' %}
+      <tbody>
+        {% if question_list %}
+          {% for question in question_list %}
+            <tr>
+              <td>{{ question.id }}</td>
+              <td>
+                {% if question.voter.all.count > 0 %}
+                  <span class="badge badge-warning px-2 py-1">
+                    {{question.voter.all.count}}
+                  </span>
+                  {%endif%}
+                </td>
+                <td>
+                  <a href="{% url 'pybo:detail' question.id %}">
+                    {{ question.subject }}
+                    {% if question.answer_set.count %}
+                      <span class="ml-2">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        <sub>{{question.answer_set.count}}</sub>
+                      </span>
+                    {% endif %}
+                  </a>
+                </td>
+                <td>{{ question.author.username }}</td>
+                <td>{{ question.create_date | date:'Y-m-d H:i'}}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="3">질문이 없습니다.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
 
-<!-- 페이징 처리 끝-->
-<a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
-  <i class="fa-solid fa-pen-to-square mr-2"></i>
-  <!-- mr은 margin right-->
-  질문 등록하기
-</a>
+      {% include 'pybo/pagination.html' %}
 
-{% endblock content %}>
+      <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">
+        <i class="fa-solid fa-pen-to-square mr-2"></i>
+        질문 등록하기</a>
+    </div>
+
+    <!-- ##################3######## [edit] ########################## -->
+    <form id="searchForm" method="get" action="{% url 'index' %}">
+      <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+      <input type="hidden" id="page" name="page" value="{{ page }}">
+      <input type="hidden" id="so" name="so" value="{{ so }}">
+    </form>
+
+  {% endblock content %}
+
+  {% block script %}
+    <script type='text/javascript'>
+      $(document).ready(function () {
+        $(".page-link").on('click', function () {
+          $("#page").val($(this).data("page"));
+          $("#searchForm").submit();
+        });
+
+        $("#btn_search").on('click', function () {
+          $("kw").val($(".kw").val());
+          $("#page").val(1); // 검색버튼을 클릭할 경우 1페이지부터 조회
+          $("#searchForm").submit();
+        });
+
+        $(".so").on('change', function () {
+          $("#so").val($(this).val());
+          $("#page").val(1);
+          $("#searchForm").submit();
+        })
+      });
+    </script>
+
+  {% endblock script %}

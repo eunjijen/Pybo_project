@@ -7,8 +7,11 @@ from django.utils import timezone
 
 for i in range(300):
     q = Question(
-        subject = f'테스트 데이터입니다"[{i: 03d}]',
-        content = f'테스트 데이터의 내용입니다"[{i: 03d}]',
+        subject = f'테스트 데이터입니다: [{i:03d}]',
+        content = f'테스트 데이터의 내용입니다: [{i:03d}]',
         create_date = timezone.now()
     )
     q.save()
+
+# admin,lee:1234
+

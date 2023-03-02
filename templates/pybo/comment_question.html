@@ -1,14 +1,15 @@
-<!-- 질문 댓글 start -->
+<!-- 질문 댓글 -->
 {% if question.comment_set.count > 0 %}
   <div class="mt-3 p-3">
 
     {% for comment in question.comment_set.all %}
+      <a name="comment_{{comment.id}}"></a>
+
       <div class="comment py-2 text-muted">
-        <!-- 텍스트 색상 회색 -->
         <span style="white-space: pre-line;">{{ comment.content }}</span>
         <span class="ml-3">
           -
-          <img class="avarta-sm" src="https://randomuser.me/api/portraits/men/{{comment.author.id}}.jpg"/>
+          <img class="avatar-sm" src="https://randomuser.me/api/portraits/men/{{comment.author.id}}.jpg"/>
           {{ comment.author }},
           {{ comment.create_date | date:'Y-m-d H:i'}}
           {% if comment.modify_date %}

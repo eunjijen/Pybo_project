@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load pybo_filter %}
+
 {% block content %}
   <!-- 사용자오류 표시 -->
   {% if messages %}
@@ -18,44 +20,60 @@
     {{ question.subject }}
   </h2>
 
-  <div class="card my-3">
-    <div class="card-body">
-      <div class="card-text" style="white-space: pre-line;">{{ question.content }}</div>
-      <div class="d-flex justify-content-end">
-        {% if question.modify_date %}
-          <div class="badge badge-success p-2 mx-3 text-left">
-            <div class="mb-2">수정일</div>
-            <div>
-              <i class="fa-regular fa-clock"></i>
-              {{ question.modify_date | date:'Y-m-d H:i' }}
-            </div>
-          </div>
-          {%endif%}
-          <div class="badge badge-primary p-2 text-left">
-            <div class="mb-2">
-              <img class="avarta-sm" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg"/>
-              {{ question.author.username }}</div>
-            <div>
-              <i class="fa-regular fa-clock"></i>
-              {{ question.create_date | date:'Y-m-d H:i' }}
-            </div>
-          </div>
-        </div>
-
-        {% if request.user == question.author %}
-          <div class="my-3">
-            <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
-              <i class="fa-solid fa-pen-to-square mr-2"></i>
-              수정</a>
-            <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:question_delete' question.id  %}">
-              <i class="fa-regular fa-trash-can"></i>
-              삭제</a>
-          </div>
-        {% endif %}
+  <div class="row my-3">
+    <div class="col-1">
+      <!--추천 영역-->
+      <div class="bg-light text-center p-3 border font-weight-bolder mb-1">
+        {{question.voter.count}}
       </div>
+      <a href="#" data-uri="{% url 'pybo:vote_question' question.id %}" class="recommend btn btn-sm btn-secondary btn-block my-1">추천</a>
+    </div>
+    <div class="col-11">
+      <!--질문 영역-->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text">
+            {% autoescape off %}
+              {{ question.content }}
+            {% endautoescape %}
+          </div>
+          <div class="d-flex justify-content-end">
+            {% if question.modify_date %}
+              <div class="badge badge-success p-2 mx-3 text-left">
+                <div class="mb-2">수정일</div>
+                <div>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ question.modify_date | date:'Y-m-d H:i' }}
+                </div>
+              </div>
+              {%endif%}
+              <div class="badge badge-primary p-2 text-left">
+                <div class="mb-2">
+                  <img class="avatar-sm" src="https://randomuser.me/api/portraits/men/{{question.author.id}}.jpg"/>
+                  {{ question.author.username }}</div>
+                <div>
+                  <i class="fa-regular fa-clock"></i>
+                  {{ question.create_date | date:'Y-m-d H:i' }}
+                </div>
+              </div>
+            </div>
 
-      {% include 'pybo/comment_question.html' %}
+            {% if request.user == question.author %}
+              <div class="my-3">
+                <a href="{% url 'pybo:question_modify' question.id %}" class="btn btn-sm btn-outline-secondary">
+                  <i class="fa-solid fa-pen-to-square mr-2"></i>
+                  수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary text-danger" data-uri="{% url 'pybo:question_delete' question.id  %}">
+                  <i class="fa-regular fa-trash-can"></i>
+                  삭제</a>
+              </div>
+            {% endif %}
+          </div>
 
+          {% include 'pybo/comment_question.html' %}
+
+        </div>
+      </div>
     </div>
 
     {% include 'pybo/answer_list.html' %}
@@ -74,9 +92,16 @@
           console.log('click 발생');
           let answer = confirm('정말 삭제할까요?');
           if (answer) {
-            location.href = $(this).data('uri'); // js로 이동할 때 사용하는 객체
+            location.href = $(this).data('uri');
           }
         });
+
+        $(".recommend").on('click', function () {
+          if (confirm('정말로 추천하시겠습니까?')) {
+            location.href = $(this).data('uri');
+          }
+        });
+
         console.log('click 이벤트 핸들러 등록 완료');
       });
     </script>

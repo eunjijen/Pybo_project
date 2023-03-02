@@ -1,26 +1,27 @@
+{% load common %}
+{% load pybo_filter %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
   <a class="navbar-brand" href="{% url 'pybo:index' %}">Pybo</a>
   <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
-      <!--margin left-->
       {% if user.is_authenticated %}
         <li class="nav-item ">
           <a class="nav-link" href="#">
-            <img class="avatar" src="https://randomuser.me/api/portraits/men/{{user.id}}.jpg">
-            {{user.username}}
+            {%avatar user.id %}
+            {{ user.username }}
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item ">
           <a class="nav-link" href="{% url 'common:logout' %}">
-            <i class="fa-solid fa-right-to-bracket"></i>
+            <i class="fa-solid fa-right-from-bracket"></i>
             로그아웃</a>
         </li>
       {% else %}
-        <li class="nav-item">
+        <li class="nav-item ">
           <a class="nav-link" href="{% url 'common:login' %}">
             <i class="fa-solid fa-right-to-bracket"></i>
             로그인</a>
@@ -30,7 +31,7 @@
             <i class="fa-solid fa-user-plus"></i>
             회원가입</a>
         </li>
-      {% endif %}
-    </ul>
-  </div>
-</nav>
+        {% endif%}
+      </ul>
+    </div>
+  </nav>

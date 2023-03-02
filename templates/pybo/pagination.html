@@ -1,14 +1,19 @@
+<!-- pagiination 작업할 때는 setting.json save 하면 false로 바꾸기 -->
+
+<!-- 페이징 처리 시작 -->
 <ul class="pagination justify-content-center">
   <!-- 이전페이지 -->
   {% if question_list.has_previous %}
     <li class="page-item">
-      <a class="page-link" href="?page=1">
+      <a class="page-link" href="#" data-page="1">
         <i class="fa-solid fa-backward-fast"></i>
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="?page={{ question_list.previous_page_number }}">
+      <a class="page-link" href="#" data-page="{{ question_list.previous_page_number }}">
+      <!-- 페이지 번호가 들어감 -->
         <i class="fa-solid fa-caret-left"></i>
+        <!-- 이전이라는 글씨 대신에 아이콘을 넣음 -->
       </a>
     </li>
   {% else %}
@@ -19,18 +24,18 @@
     </li>
   {% endif %}
 
-  <!-- 페이지 리스트 -->
+  <!-- 페이지리스트 -->
   {% for page_number in question_list.paginator.page_range %}
     {% if page_number >= question_list.number|add:-3 and page_number <= question_list.number|add:3 %}
-      <!-- | 앞에 있는 것을 매개변수로 받아 (줄바꿔서 타이핑하면 안됨) | 사이와 : 사이도 모두 붙여야 돼. 띄워쓰기 하면 에러 -->
-      <!-- 위 범위 안에 있으면 랜더링을 하고 그렇지 않으면 랜드링을 하지 마라-->
+      <!-- 현재 페이지 active page -->
       {% if page_number == question_list.number %}
         <li class="page-item active" aria-current="page">
-          <a class="page-link" href="#">{{page_number}}</a>
+          <a class="page-link" href="#">{{ page_number }}</a>
         </li>
+      <!-- active page가 아닌 경우 -->
       {% else %}
         <li class="page-item">
-          <a class="page-link" href="?page={{page_number}}">{{page_number}}</a>
+          <a class="page-link" href="#" data-page="{{ page_number }}">{{ page_number }}</a>
         </li>
       {% endif %}
     {% endif %}
@@ -39,12 +44,13 @@
   <!-- 다음페이지 -->
   {% if question_list.has_next %}
     <li class="page-item">
-      <a class="page-link" href="?page={{ question_list.next_page_number }}">
+      <a class="page-link" href="#" data-page="{{ question_list.next_page_number }}">
         <i class="fa-solid fa-caret-right"></i>
+        <!-- 다음이라는 글씨 대신에 아이콘을 넣음 -->
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="?page={{ question_list.paginator.num_pages }}">
+      <a class="page-link" href="#" data-page="{{ question_list.paginator.num_pages }}">
         <i class="fa-solid fa-forward-fast"></i>
       </a>
     </li>
